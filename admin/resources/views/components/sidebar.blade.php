@@ -37,7 +37,7 @@
                                 <span class="menu-icon"><i class="ti ti-dashboard"></i></span>
                                 <span class="menu-text"> Dashboard </span>
                                     @role('Master|SuperAdmin')
-                                    aa
+                                    role check maaster or superadmin
                                     @endrole
                                 <span class="badge bg-danger rounded-pill">9+</span>
                             </a>
