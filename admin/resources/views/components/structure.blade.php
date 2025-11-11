@@ -29,7 +29,7 @@
     <link href="{{ asset('css/icons.min.css') }}" rel="stylesheet" type="text/css" />
 
     <!-- Page-specific CSS -->
-    @stack('css')
+    @stack('page-css')
 
 </head>
 
@@ -439,7 +439,7 @@
     <script src="{{ asset('js/pages/dashboard.js') }}"></script>
 
     <!-- Page-specific JS -->
-    @stack('scripts')
+    @stack('page-js')
 
 </body>
 

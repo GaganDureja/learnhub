@@ -2,7 +2,9 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RoleController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\PermissionController;
 
 Route::get('/', function () {
     if (Auth::check()) {
@@ -29,5 +31,24 @@ Route::middleware(['auth', 'role:Master, SuperAdmin, Admin, SubAdmin, Teacher, M
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+Route::middleware(['auth', 'role:Master'])
+    ->prefix('admin')
+    ->group(function () {
+        Route::resource('permissions', PermissionController::class);
+    });
 
+// Master can create/edit/delete roles
+Route::middleware(['auth', 'role:Master'])
+    ->prefix('admin')
+    ->group(function () {
+        Route::resource('roles', RoleController::class)->except(['index']);
+    });
+
+// All super roles can view roles
+Route::middleware(['auth', 'role:Master,SuperAdmin,Admin,SubAdmin'])
+    ->prefix('admin')
+    ->group(function () {
+        Route::get('roles', [RoleController::class, 'index'])->name('roles.index');
+    });
+
+require __DIR__ . '/auth.php';
