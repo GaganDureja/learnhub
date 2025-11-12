@@ -31,9 +31,7 @@
 
             <!--- Menu -->
             <li class="side-nav-title">
-                Menu @role('Master|SuperAdmin')
-                    {{ auth()->user()->getRoleNames()->first() }}
-                @endrole
+                Menu
             </li>
             <li class="side-nav-item">
                 <a href="{{ route('dashboard') }}" class="side-nav-link">
@@ -213,8 +211,8 @@
                 Communication
             </li>
             <li class="side-nav-item">
-                <a data-bs-toggle="collapse" href="#notifications" aria-expanded="false" aria-controls="notifications"
-                    class="side-nav-link">
+                <a data-bs-toggle="collapse" href="#notifications" aria-expanded="false"
+                    aria-controls="notifications" class="side-nav-link">
                     <span class="menu-icon"><i class="ti ti-bell"></i></span>
                     <span class="menu-text"> Notifications</span>
                     <span class="menu-arrow"></span>
@@ -374,10 +372,13 @@
                 </a>
             </li>
             <li class="side-nav-item">
-                <a href="#" class="side-nav-link">
-                    <span class="menu-icon"><i class="ti ti-logout"></i></span>
-                    <span class="menu-text"> Sign Out </span>
-                </a>
+                <form method="POST" action="{{ route('logout') }}">
+                    @csrf
+                    <a href="javascript:void(0);" class="side-nav-link text-danger" onclick="event.preventDefault(); this.closest('form').submit();">
+                        <span class="menu-icon"><i class="ti ti-logout"></i></span>
+                        <span class="menu-text"> Sign Out </span>
+                    </a>
+                </form>
             </li>
 
         </ul>

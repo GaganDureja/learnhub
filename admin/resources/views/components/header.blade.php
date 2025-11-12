@@ -31,10 +31,10 @@
 
                 <div>
                     <h4 class="page-title fs-20 fw-semibold mb-0">Dashboard</h4>
-
+                    @role('Master|SuperAdmin')
+                        {{ auth()->user()->getRoleNames()->first() }}
+                    @endrole
                 </div>
-
-
 
             </div>
 
@@ -56,59 +56,7 @@
                 <span class="me-2">Search something..</span>
             </div>
 
-            <!-- Language Dropdown -->
-            <div class="topbar-item">
-                <div class="dropdown">
-                    <button class="topbar-link" data-bs-toggle="dropdown" data-bs-offset="0,25" type="button"
-                        aria-haspopup="false" aria-expanded="false">
-                        <img src="{{ asset('images/flags/us.svg') }}" alt="user-image" class="w-100 rounded"
-                            height="18" id="selected-language-image">
-                    </button>
 
-                    <div class="dropdown-menu dropdown-menu-end">
-                        <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item" data-translator-lang="en">
-                            <img src="{{ asset('images/flags/us.svg') }}" alt="user-image" class="me-1 rounded"
-                                height="18" data-translator-image> <span class="align-middle">English</span>
-                        </a>
-
-                        <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item" data-translator-lang="hi">
-                            <img src="{{ asset('images/flags/in.svg') }}" alt="user-image" class="me-1 rounded"
-                                height="18" data-translator-image> <span class="align-middle">Hindi</span>
-                        </a>
-
-                        <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item">
-                            <img src="{{ asset('images/flags/de.svg') }}" alt="user-image" class="me-1 rounded"
-                                height="18">
-                            <span class="align-middle">German</span>
-                        </a>
-
-                        <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item">
-                            <img src="{{ asset('images/flags/it.svg') }}" alt="user-image" class="me-1 rounded"
-                                height="18">
-                            <span class="align-middle">Italian</span>
-                        </a>
-
-                        <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item">
-                            <img src="{{ asset('images/flags/es.svg') }}" alt="user-image" class="me-1 rounded"
-                                height="18">
-                            <span class="align-middle">Spanish</span>
-                        </a>
-
-                        <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item">
-                            <img src="{{ asset('images/flags/ru.svg') }}" alt="user-image" class="me-1 rounded"
-                                height="18">
-                            <span class="align-middle">Russian</span>
-                        </a>
-
-                    </div>
-                </div>
-            </div>
 
             <!-- Notification Dropdown -->
             <div class="topbar-item">
@@ -275,81 +223,6 @@
                 </div>
             </div>
 
-            <!-- Apps Dropdown -->
-            <div class="topbar-item d-none d-sm-flex">
-                <div class="dropdown">
-                    <button class="topbar-link dropdown-toggle drop-arrow-none" data-bs-toggle="dropdown"
-                        data-bs-offset="0,18" type="button" aria-haspopup="false" aria-expanded="false">
-                        <i class="ri-apps-2-add-line fs-22"></i>
-                    </button>
-                    <div class="dropdown-menu dropdown-menu-end dropdown-menu-lg p-0">
-                        <div class="p-2">
-                            <div class="row g-0">
-                                <div class="col">
-                                    <a class="dropdown-icon-item" href="#">
-                                        <img src="{{ asset('images/brands/slack.svg') }}" alt="slack">
-                                        <span>Slack</span>
-                                    </a>
-                                </div>
-                                <div class="col">
-                                    <a class="dropdown-icon-item" href="#">
-                                        <img src="{{ asset('images/brands/gitlab.svg') }}" alt="Github">
-                                        <span>Gitlab</span>
-                                    </a>
-                                </div>
-                                <div class="col">
-                                    <a class="dropdown-icon-item" href="#">
-                                        <img src="{{ asset('images/brands/dribbble.svg') }}" alt="dribbble">
-                                        <span>Dribbble</span>
-                                    </a>
-                                </div>
-                            </div>
-
-                            <div class="row g-0">
-                                <div class="col">
-                                    <a class="dropdown-icon-item" href="#">
-                                        <img src="{{ asset('images/brands/bitbucket.svg') }}" alt="bitbucket">
-                                        <span>Bitbucket</span>
-                                    </a>
-                                </div>
-                                <div class="col">
-                                    <a class="dropdown-icon-item" href="#">
-                                        <img src="{{ asset('images/brands/dropbox.svg') }}" alt="dropbox">
-                                        <span>Dropbox</span>
-                                    </a>
-                                </div>
-                                <div class="col">
-                                    <a class="dropdown-icon-item" href="#">
-                                        <img src="{{ asset('images/brands/google-cloud.svg') }}" alt="G Suite">
-                                        <span>G Cloud</span>
-                                    </a>
-                                </div>
-                            </div> <!-- end row-->
-
-                            <div class="row g-0">
-                                <div class="col">
-                                    <a class="dropdown-icon-item" href="#">
-                                        <img src="{{ asset('images/brands/aws.svg') }}" alt="bitbucket">
-                                        <span>AWS</span>
-                                    </a>
-                                </div>
-                                <div class="col">
-                                    <a class="dropdown-icon-item" href="#">
-                                        <img src="{{ asset('images/brands/digital-ocean.svg') }}" alt="dropbox">
-                                        <span>Server</span>
-                                    </a>
-                                </div>
-                                <div class="col">
-                                    <a class="dropdown-icon-item" href="#">
-                                        <img src="{{ asset('images/brands/bootstrap.svg') }}" alt="G Suite">
-                                        <span>Bootstrap</span>
-                                    </a>
-                                </div>
-                            </div> <!-- end row-->
-                        </div>
-                    </div>
-                </div>
-            </div>
 
             <!-- Button Trigger Customizer Offcanvas -->
             <div class="topbar-item d-none d-sm-flex">
@@ -388,25 +261,7 @@
                         <!-- item-->
                         <a href="{{ route('profile.edit') }}" class="dropdown-item">
                             <i class="ri-account-circle-line me-1 fs-16 align-middle"></i>
-                            <span class="align-middle">{{ __('Profile') }}</span>
-                        </a>
-
-                        <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item">
-                            <i class="ri-account-circle-line me-1 fs-16 align-middle"></i>
                             <span class="align-middle">My Account</span>
-                        </a>
-
-                        <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item">
-                            <i class="ri-wallet-3-line me-1 fs-16 align-middle"></i>
-                            <span class="align-middle">Wallet : <span class="fw-semibold">$89.25k</span></span>
-                        </a>
-
-                        <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item">
-                            <i class="ri-settings-2-line me-1 fs-16 align-middle"></i>
-                            <span class="align-middle">Settings</span>
                         </a>
 
                         <!-- item-->
@@ -416,12 +271,6 @@
                         </a>
 
                         <div class="dropdown-divider"></div>
-
-                        <!-- item-->
-                        <a href="javascript:void(0);" class="dropdown-item">
-                            <i class="ri-lock-line me-1 fs-16 align-middle"></i>
-                            <span class="align-middle">Lock Screen</span>
-                        </a>
 
                         <!-- item-->
                         <form method="POST" action="{{ route('logout') }}">
