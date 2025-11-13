@@ -1,4 +1,4 @@
-<x-auth-layout title="404 - Page Not Found">
+<x-auth-layout title="403 - Access Denied">
     <div class="text-center">
         <h1 class="text-error">403</h1>
         <h3 class="mt-3 mb-2">Access Denied !</h3>

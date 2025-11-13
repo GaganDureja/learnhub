@@ -16,7 +16,7 @@ Route::get('/', function () {
 
         // Student role → redirect to student portal (or logout)
         Auth::logout();
-        return redirect('https://google.com'); // change this to your student panel domain
+        return redirect('/'); // change this to your student panel domain
     }
     return redirect()->route('login');
 });
