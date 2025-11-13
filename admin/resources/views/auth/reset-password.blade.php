@@ -31,6 +31,6 @@
     </form>
 
     <p class="text-muted fs-14 mb-0">
-        Back To <a href="auth-login.html" class="fw-semibold text-danger ms-1">Login !</a>
+        Back To <a href="{{ url('/') }}" class="fw-semibold text-danger ms-1">Login !</a>
     </p>
 </x-auth-layout>
