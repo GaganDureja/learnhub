@@ -41,7 +41,10 @@
                     <img src="{{ asset('images/logo.png') }}" alt="logo light" height="26" class="logo-light">
                 </a>
 
-                <p class="fw-semibold mb-4 text-center text-muted fs-15">Admin Panel Design by Coderthemes</p>
+                <p class="fw-semibold mb-4 text-center text-muted fs-15">Admin Panel Designed by <a
+                        href="https://dream2realityy.in/" target="_blank">Gagan Dureja
+                    </a>
+                </p>
 
                 <div class="card overflow-hidden text-center p-xxl-4 p-3 mb-0">
 

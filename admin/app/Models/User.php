@@ -7,6 +7,8 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Spatie\Permission\Traits\HasRoles;
+use Illuminate\Auth\Notifications\ResetPassword;
+use Illuminate\Notifications\Messages\MailMessage;
 
 class User extends Authenticatable
 {
@@ -45,5 +47,27 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function sendPasswordResetNotification($token)
+    {
+        $url = url(route('password.reset', [
+            'token' => $token,
+            'email' => $this->email,
+        ]));
+
+        $this->notify(new class($url) extends ResetPassword {
+            public function __construct(public $url) {}
+
+            public function toMail($notifiable)
+            {
+                return (new MailMessage)
+                    ->subject(config('app.name') . ' | Password Reset Request')
+                    ->view('emails.password-reset', [
+                        'url' => $this->url,
+                        'user' => $notifiable,
+                    ]);
+            }
+        });
     }
 }
