@@ -111,4 +111,20 @@ class RoleController extends Controller
 
         return back()->with('success', 'Role deleted successfully.');
     }
+
+    public function restore($id)
+    {
+        $role = Role::withTrashed()->findOrFail($id);
+        $role->restore();
+
+        return back()->with('success', 'Role restored successfully!');
+    }
+
+    public function forceDelete($id)
+    {
+        $role = Role::withTrashed()->findOrFail($id);
+        $role->forceDelete();
+
+        return back()->with('success', 'Role permanently deleted!');
+    }
 }

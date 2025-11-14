@@ -1,33 +1,40 @@
-<x-structure>
-    <x-header title="Create Role" />
+<x-structure title="Create Role">
+    @push('page-css')
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    @endpush
 
-    <div class="container py-4">
-        <form method="POST" action="{{ route('roles.store') }}">
-            @csrf
+    <div class="page-container">
 
-            <div class="mb-3">
-                <label for="name" class="form-label">Role Name</label>
-                <input type="text" name="name" class="form-control" required>
-                @error('name') <small class="text-danger">{{ $message }}</small> @enderror
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Permissions</label>
-                <div class="row">
-                    @foreach($permissions as $permission)
-                        <div class="col-md-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="permissions[]" value="{{ $permission->id }}" id="perm{{ $permission->id }}">
-                                <label class="form-check-label" for="perm{{ $permission->id }}">{{ $permission->name }}</label>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header border-bottom border-dashed d-flex align-items-center">
+                        <h4 class="header-title">Add Data</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <form method="POST" action="{{ route('roles.store') }}">
+                                    @csrf
+                                    <div class="row g-2">
+                                        <div class="col-md-4">
+                                            <div class="form-floating">
+                                                <input type="text" class="form-control" id="role" name="role"
+                                                    placeholder="Instructor">
+                                                <label for="role">Role Name</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <x-form-buttons />
+                                </form>
                             </div>
                         </div>
-                    @endforeach
-                </div>
-            </div>
+                    </div> <!-- end card-body -->
+                </div> <!-- end card -->
+            </div><!-- end col -->
+        </div><!-- end row -->
 
-            <x-form-buttons />
-        </form>
-    </div>
 
-    <x-footer />
+    </div> <!-- container -->
+
 </x-structure>
