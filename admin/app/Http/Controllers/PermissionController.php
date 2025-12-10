@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\AlertHelper;
 use Illuminate\Http\Request;
-use Spatie\Permission\Models\Permission;
 use Illuminate\Support\Facades\Crypt;
+use Spatie\Permission\Models\Permission;
 
 class PermissionController extends Controller
 {
@@ -24,8 +25,8 @@ class PermissionController extends Controller
      */
     public function index()
     {
-        $permissions = Permission::all();
-        return view('admin.permissions.index', compact('permissions'));
+        $items = Permission::all();
+        return view('permissions.index', compact('items'));
     }
 
     /**
@@ -33,7 +34,7 @@ class PermissionController extends Controller
      */
     public function create()
     {
-        return view('admin.permissions.create');
+        return view('permissions.create');
     }
 
     /**
@@ -49,8 +50,8 @@ class PermissionController extends Controller
             'name' => $request->name,
             'guard_name' => 'web',
         ]);
-
-        return redirect()->route('permissions.index')->with('success', 'Permission created successfully.');
+        AlertHelper::flash('Success', 'Permission created successfully.', 'success');
+        return redirect()->route('permissions.index');
     }
 
     /**
@@ -60,7 +61,7 @@ class PermissionController extends Controller
     {
         $id = Crypt::decryptString($id);
         $permission = Permission::findOrFail($id);
-        return view('admin.permissions.edit', compact('permission'));
+        return view('permissions.edit', compact('permission'));
     }
 
     /**
@@ -76,8 +77,8 @@ class PermissionController extends Controller
         ]);
 
         $permission->update(['name' => $request->name]);
-
-        return redirect()->route('permissions.index')->with('success', 'Permission updated successfully.');
+        AlertHelper::flash('Success', 'Permission updated successfully.', 'success');
+        return redirect()->route('permissions.index');
     }
 
     /**
@@ -88,7 +89,7 @@ class PermissionController extends Controller
         $id = Crypt::decryptString($id);
         $permission = Permission::findOrFail($id);
         $permission->delete();
-
-        return back()->with('success', 'Permission deleted successfully.');
+        AlertHelper::flash('Success', 'Permission deleted successfully.', 'warning');
+        return redirect()->route('permissions.index');
     }
 }

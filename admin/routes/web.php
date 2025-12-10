@@ -1,9 +1,12 @@
 <?php
 
+use App\Models\Role;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PermissionController;
 
 
@@ -14,75 +17,55 @@ use App\Http\Controllers\PermissionController;
 */
 
 Route::get('/', function () {
-    if (!Auth::check()) return redirect()->route('login');
-    $role = Auth::user()->getRoleNames()->first();
-    if (in_array($role, ['Master','SuperAdmin','Admin','SubAdmin','Instructor'])) {
+    if (!Auth::check()) {
+        return redirect()->route('login');
+    }
+    $validRoles = Role::pluck('name')->toArray();
+    if (Auth::user()->hasAnyRole($validRoles)) {
         return redirect()->route('dashboard');
     }
-    Auth::logout();
-    return redirect('/');
+    // If user has any other role
+    return redirect()->route('login')->with('error', 'Unauthorized access.');
 });
 
 
-/*
-|--------------------------------------------------------------------------
-| DASHBOARD + PROFILE (all allow)
-|--------------------------------------------------------------------------
-*/
-
-
-
-// Route::middleware(['auth'])->prefix('admin')->group(function () {
 Route::middleware(['auth'])->group(function () {
 
-    /*
-    |--------------------------------------------------------------------------
-    | Master + SuperAdmin (Full Control)
-    |--------------------------------------------------------------------------
-    */
-    Route::middleware(['role:Master,SuperAdmin'])->group(function () {
-
-        // Restore deleted
-        Route::post('/roles/{id}/restore', [RoleController::class, 'restore'])->name('roles.restore');
-        Route::post('/permissions/{id}/restore', [PermissionController::class, 'restore'])->name('permissions.restore');
-
-        // Permanent delete
-        Route::delete('/roles/{id}/force-delete', [RoleController::class, 'forceDelete'])->name('roles.force-delete');
-        Route::delete('/permissions/{id}/force-delete', [PermissionController::class, 'forceDelete'])->name('permissions.force-delete');
+    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::prefix('profile')->name('profile.')->group(function () {
+        Route::get('/', [ProfileController::class, 'edit'])->name('edit');
+        Route::put('/', [ProfileController::class, 'update'])->name('update');
+        Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
     });
 
-    /*
-    |--------------------------------------------------------------------------
-    | Master + SuperAdmin + Admin + SubAdmin (Delete Control)
-    |--------------------------------------------------------------------------
-    */
-    Route::middleware(['role:Master,SuperAdmin,Admin,SubAdmin'])->group(function () {
-
-        // Soft delete
-        Route::delete('/roles/{id}', [RoleController::class, 'destroy'])->name('roles.destroy');
-        Route::delete('/permissions/{id}', [PermissionController::class, 'destroy'])->name('permissions.destroy');
-
+    // Roles module
+    Route::prefix('roles')->name('roles.')->group(function () {
+        Route::get('/', [RoleController::class, 'index'])->name('index')->middleware('permission:role-list');
+        Route::get('/create', [RoleController::class, 'create'])->name('create')->middleware('permission:role-create');
+        Route::post('/', [RoleController::class, 'store'])->name('store')->middleware('permission:role-create');
+        Route::get('/{role}/edit', [RoleController::class, 'edit'])->name('edit')->middleware('permission:role-edit');
+        Route::put('/{role}', [RoleController::class, 'update'])->name('update')->middleware('permission:role-edit');
+        Route::delete('/{role}', [RoleController::class, 'destroy'])->name('destroy')->middleware('permission:role-delete');
     });
 
-    /*
-    |--------------------------------------------------------------------------
-    | Master + SuperAdmin + Admin + SubAdmin + Instructor (CRUD + Soft Delete)
-    |--------------------------------------------------------------------------
-    */
-    Route::middleware(['role:Master,SuperAdmin,Admin,SubAdmin,Instructor'])->group(function () {
+    // Permissions module
+    Route::prefix('permissions')->name('permissions.')->group(function () {
+        Route::get('/', [PermissionController::class, 'index'])->name('index')->middleware('permission:permission-list');
+    });
 
-        Route::view('/dashboard','dashboard')->middleware('verified')->name('dashboard');
-        Route::get('/profile',[ProfileController::class,'edit'])->name('profile.edit');
-        Route::patch('/profile',[ProfileController::class,'update'])->name('profile.update');
-        Route::delete('/profile',[ProfileController::class,'destroy'])->name('profile.destroy');
-
-
-        Route::resource('roles', RoleController::class)->only(['index','create','store','edit','update']);
-        Route::resource('permissions', PermissionController::class)->only(['index','create','store','edit','update']);
-
+    // Users module
+    Route::prefix('users')->name('users.')->group(function () {
+        Route::get('/', [UserController::class, 'index'])->name('index')->middleware('user:role-list');
+        Route::get('/create', [UserController::class, 'create'])->name('create')->middleware('user:role-create');
+        Route::post('/', [UserController::class, 'store'])->name('store')->middleware('user:role-create');
+        Route::get('/{role}/edit', [UserController::class, 'edit'])->name('edit')->middleware('user:role-edit');
+        Route::put('/{role}', [UserController::class, 'update'])->name('update')->middleware('user:role-edit');
+        Route::delete('/{role}', [UserController::class, 'destroy'])->name('destroy')->middleware('user:role-delete');
+        Route::post('/{role}/restore', [UserController::class, 'restore'])->name('restore')->middleware('user:role-restore');
+        Route::delete('/{role}/force-delete', [UserController::class, 'forceDelete'])->name('force-delete')->middleware('user:role-force-delete');
     });
 
 });
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

@@ -3,7 +3,7 @@
         <i class="fa fa-save me-1"></i> {{ $save }}
     </button>
 
-    <a href="{{ url()->previous() }}" class="btn btn-danger px-4">
+    <a href="{{ route('dashboard') }}" class="btn btn-danger px-4">
         <i class="fa fa-arrow-left me-1"></i> {{ $cancel }}
     </a>
 </div>

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Helpers\AlertHelper;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 
@@ -19,20 +21,18 @@ class RoleController extends Controller
      */
     public function index()
     {
-        $roles = Role::with('permissions')->get();
-        return view('roles.index', compact('roles'));
+        $this->authorize('role-list');
+        $items = Role::with('permissions')->get();
+        return view('roles.index', compact('items'));
     }
 
     /**
      * Show form to create a new role
-     * Only Master
+     *
      */
     public function create()
     {
-        if (!auth()->user()->hasRole('Master')) {
-            abort(403, 'Unauthorized access');
-        }
-
+        $this->authorize('role-create');
         $permissions = Permission::all();
         return view('roles.create', compact('permissions'));
     }
@@ -43,19 +43,19 @@ class RoleController extends Controller
      */
     public function store(Request $request)
     {
-        if (!auth()->user()->hasRole('Master')) {
-            abort(403, 'Unauthorized access');
-        }
-
+        $this->authorize('role-create');
         $request->validate([
             'name' => 'required|unique:roles,name',
             'permissions' => 'nullable|array',
         ]);
 
         $role = Role::create(['name' => $request->name]);
-        $role->syncPermissions($request->permissions ?? []);
-
-        return redirect()->route('roles.index')->with('success', 'Role created successfully.');
+        $permissions = Permission::whereIn('id', $request->permissions ?? [])
+                    ->pluck('name')
+                    ->toArray();
+        $role->syncPermissions($permissions ?? []);
+        AlertHelper::flash('Success', 'Role created successfully.', 'success');
+        return redirect()->route('roles.index');
     }
 
     /**
@@ -64,10 +64,8 @@ class RoleController extends Controller
      */
     public function edit($id)
     {
-        if (!auth()->user()->hasRole('Master')) {
-            abort(403, 'Unauthorized access');
-        }
-
+        $this->authorize('role-edit');
+        $id = Crypt::decrypt($id);
         $role = Role::findOrFail($id);
         $permissions = Permission::all();
         return view('roles.edit', compact('role', 'permissions'));
@@ -79,10 +77,8 @@ class RoleController extends Controller
      */
     public function update(Request $request, $id)
     {
-        if (!auth()->user()->hasRole('Master')) {
-            abort(403, 'Unauthorized access');
-        }
-
+        $this->authorize('role-edit');
+        $id = Crypt::decrypt($id);
         $role = Role::findOrFail($id);
 
         $request->validate([
@@ -91,9 +87,12 @@ class RoleController extends Controller
         ]);
 
         $role->update(['name' => $request->name]);
-        $role->syncPermissions($request->permissions ?? []);
-
-        return redirect()->route('roles.index')->with('success', 'Role updated successfully.');
+        $permissions = Permission::whereIn('id', $request->permissions ?? [])
+                    ->pluck('name')
+                    ->toArray();
+        $role->syncPermissions($permissions);
+        AlertHelper::flash('Success', 'Role updated successfully.', 'success');
+        return redirect()->route('roles.index');
     }
 
     /**
@@ -102,29 +101,31 @@ class RoleController extends Controller
      */
     public function destroy($id)
     {
-        if (!auth()->user()->hasRole('Master')) {
-            abort(403, 'Unauthorized access');
-        }
-
+        $this->authorize('role-delete');
+        $id = Crypt::decrypt($id);
         $role = Role::findOrFail($id);
         $role->delete();
-
-        return back()->with('success', 'Role deleted successfully.');
+        AlertHelper::flash('Deleted', 'Role deleted successfully.', 'warning');
+        return redirect()->route('roles.index');
     }
 
     public function restore($id)
     {
+        $this->authorize('role-restore');
+        $id = Crypt::decrypt($id);
         $role = Role::withTrashed()->findOrFail($id);
         $role->restore();
-
-        return back()->with('success', 'Role restored successfully!');
+        AlertHelper::flash('Restored', 'Role restored successfully.', 'success');
+        return redirect()->route('roles.index');
     }
 
     public function forceDelete($id)
     {
+        $this->authorize('role-force-delete');
+        $id = Crypt::decrypt($id);
         $role = Role::withTrashed()->findOrFail($id);
         $role->forceDelete();
-
-        return back()->with('success', 'Role permanently deleted!');
+        AlertHelper::flash('Deleted', 'Role permanently deleted!', 'danger');
+        return redirect()->route('roles.index');
     }
 }

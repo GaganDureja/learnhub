@@ -1,36 +1,28 @@
-<x-structure>
-    <x-header title="Edit Role" />
+<x-structure title="Edit Role">
+    <div class="page-container">
 
-    <div class="container py-4">
-        <form method="POST" action="{{ route('roles.update', $role->id) }}">
-            @csrf
-            @method('PUT')
-
-            <div class="mb-3">
-                <label for="name" class="form-label">Role Name</label>
-                <input type="text" name="name" class="form-control" value="{{ $role->name }}" required>
-                @error('name') <small class="text-danger">{{ $message }}</small> @enderror
-            </div>
-
-            <div class="mb-3">
-                <label class="form-label">Permissions</label>
-                <div class="row">
-                    @foreach($permissions as $permission)
-                        <div class="col-md-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" name="permissions[]" value="{{ $permission->id }}"
-                                    id="perm{{ $permission->id }}"
-                                    {{ $role->permissions->contains($permission->id) ? 'checked' : '' }}>
-                                <label class="form-check-label" for="perm{{ $permission->id }}">{{ $permission->name }}</label>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header border-bottom border-dashed d-flex align-items-center">
+                        <h4 class="header-title">Edit Data</h4>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-12">
+                                <form method="POST" action="{{ route('roles.update', Crypt::encrypt($role->id)) }}">
+                                    @csrf
+                                    @method('PUT')
+                                    @include('roles.form')
+                                    <x-form-buttons />
+                                </form>
                             </div>
                         </div>
-                    @endforeach
-                </div>
-            </div>
+                    </div> <!-- end card-body -->
+                </div> <!-- end card -->
+            </div><!-- end col -->
+        </div><!-- end row -->
 
-            <x-form-buttons />
-        </form>
-    </div>
 
-    <x-footer />
+    </div> <!-- container -->
 </x-structure>

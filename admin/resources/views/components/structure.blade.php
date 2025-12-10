@@ -28,6 +28,10 @@
     <!-- Icons css -->
     <link href="{{ asset('css/icons.min.css') }}" rel="stylesheet" type="text/css" />
 
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- Page-specific CSS -->
     @stack('page-css')
 
@@ -437,6 +441,27 @@
 
     <!-- Projects Analytics Dashboard App js -->
     <script src="{{ asset('js/pages/dashboard.js') }}"></script>
+
+    @if (session('swal'))
+        <script>
+            Swal.fire({
+                icon: '{{ session('swal.icon') }}',
+                title: '{{ session('swal.title') }}',
+                text: '{{ session('swal.message') }}',
+            });
+        </script>
+    @endif
+
+    {{-- any other error --}}
+    @if ($errors->any())
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Validation Error',
+                html: `{!! implode('<br>', $errors->all()) !!}`
+            });
+        </script>
+    @endif
 
     <!-- Page-specific JS -->
     @stack('page-js')

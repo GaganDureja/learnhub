@@ -45,50 +45,45 @@
             <li class="side-nav-title">
                 Authorization
             </li>
-            <li class="side-nav-item">
-                <a data-bs-toggle="collapse" href="#roles" aria-expanded="false" aria-controls="roles"
-                    class="side-nav-link">
-                    <span class="menu-icon"><i class="ti ti-shield-lock"></i></span>
-                    <span class="menu-text"> Roles</span>
-                    <span class="menu-arrow"></span>
-                </a>
-                <div class="collapse" id="roles">
-                    <ul class="sub-menu">
-                        <li class="side-nav-item">
-                            <a href="{{ route('roles.create') }}" class="side-nav-link">
-                                <span class="menu-text">Add New</span>
-                            </a>
-                        </li>
-                        <li class="side-nav-item">
-                            <a href="{{ route('roles.index') }}" class="side-nav-link">
-                                <span class="menu-text">View All</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            <li class="side-nav-item">
-                <a data-bs-toggle="collapse" href="#permissions" aria-expanded="false" aria-controls="permissions"
-                    class="side-nav-link">
-                    <span class="menu-icon"><i class="ti ti-key"></i></span>
-                    <span class="menu-text"> Permissions</span>
-                    <span class="menu-arrow"></span>
-                </a>
-                <div class="collapse" id="permissions">
-                    <ul class="sub-menu">
-                        <li class="side-nav-item">
-                            <a href="{{ route('permissions.create') }}" class="side-nav-link">
-                                <span class="menu-text">Add New</span>
-                            </a>
-                        </li>
-                        <li class="side-nav-item">
-                            <a href="{{ route('permissions.index') }}" class="side-nav-link">
-                                <span class="menu-text">View All</span>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
+            @if (canAccessModule('role'))
+                <li class="side-nav-item">
+                    <a data-bs-toggle="collapse" href="#roles" aria-expanded="false" aria-controls="roles"
+                        class="side-nav-link">
+                        <span class="menu-icon"><i class="ti ti-shield-lock"></i></span>
+                        <span class="menu-text"> Roles</span>
+                        <span class="menu-arrow"></span>
+                    </a>
+                    <div class="collapse" id="roles">
+                        <ul class="sub-menu">
+                            @can('role-create')
+                                <li class="side-nav-item">
+                                    <a href="{{ route('roles.create') }}" class="side-nav-link">
+                                        <span class="menu-text">Add New</span>
+                                    </a>
+                                </li>
+                            @endcan
+                            @can('role-list')
+                                <li class="side-nav-item">
+                                    <a href="{{ route('roles.index') }}" class="side-nav-link">
+                                        <span class="menu-text">View All</span>
+                                    </a>
+                                </li>
+                            @endcan
+                        </ul>
+                    </div>
+                </li>
+            @endif
+
+            @can('permission-list')
+                <li class="side-nav-item">
+                    <a href="{{ route('permissions.index') }}" class="side-nav-link">
+                        <span class="menu-icon"><i class="ti ti-key"></i></span>
+                        <span class="menu-text"> Permissions </span>
+                    </a>
+                </li>
+            @endcan
+
+            @if (canAccessModule('user'))
             <li class="side-nav-item">
                 <a data-bs-toggle="collapse" href="#users" aria-expanded="false" aria-controls="users"
                     class="side-nav-link">
@@ -111,12 +106,13 @@
                     </ul>
                 </div>
             </li>
-
+            @endif
 
             <!--- Content Management -->
             <li class="side-nav-title">
                 Content Management
             </li>
+            @if (canAccessModule('category'))
             <li class="side-nav-item">
                 <a data-bs-toggle="collapse" href="#categories" aria-expanded="false" aria-controls="categories"
                     class="side-nav-link">
@@ -139,6 +135,9 @@
                     </ul>
                 </div>
             </li>
+            @endif
+
+            @if (canAccessModule('subcategory'))
             <li class="side-nav-item">
                 <a data-bs-toggle="collapse" href="#subCategories" aria-expanded="false"
                     aria-controls="subCategories" class="side-nav-link">
@@ -161,6 +160,9 @@
                     </ul>
                 </div>
             </li>
+            @endif
+
+            @if (canAccessModule('tag'))
             <li class="side-nav-item">
                 <a data-bs-toggle="collapse" href="#tags" aria-expanded="false" aria-controls="tags"
                     class="side-nav-link">
@@ -183,6 +185,9 @@
                     </ul>
                 </div>
             </li>
+            @endif
+
+            @if (canAccessModule('course'))
             <li class="side-nav-item">
                 <a data-bs-toggle="collapse" href="#courses" aria-expanded="false" aria-controls="courses"
                     class="side-nav-link">
@@ -205,7 +210,7 @@
                     </ul>
                 </div>
             </li>
-
+            @endif
             <!--- Communication -->
             <li class="side-nav-title">
                 Communication
@@ -374,7 +379,8 @@
             <li class="side-nav-item">
                 <form method="POST" action="{{ route('logout') }}">
                     @csrf
-                    <a href="javascript:void(0);" class="side-nav-link text-danger" onclick="event.preventDefault(); this.closest('form').submit();">
+                    <a href="javascript:void(0);" class="side-nav-link text-danger"
+                        onclick="event.preventDefault(); this.closest('form').submit();">
                         <span class="menu-icon"><i class="ti ti-logout"></i></span>
                         <span class="menu-text"> Sign Out </span>
                     </a>

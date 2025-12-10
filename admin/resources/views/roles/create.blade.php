@@ -1,7 +1,4 @@
 <x-structure title="Create Role">
-    @push('page-css')
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-    @endpush
 
     <div class="page-container">
 
@@ -16,15 +13,7 @@
                             <div class="col-lg-12">
                                 <form method="POST" action="{{ route('roles.store') }}">
                                     @csrf
-                                    <div class="row g-2">
-                                        <div class="col-md-4">
-                                            <div class="form-floating">
-                                                <input type="text" class="form-control" id="role" name="role"
-                                                    placeholder="Instructor">
-                                                <label for="role">Role Name</label>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    @include('roles.form')
                                     <x-form-buttons />
                                 </form>
                             </div>

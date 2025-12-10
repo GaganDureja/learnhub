@@ -1,4 +1,4 @@
-<x-structure title="Roles Management">
+<x-structure title="Permissions Management">
 
     @push('page-css')
         <!-- Datatables css -->
@@ -17,10 +17,6 @@
     @endpush
 
     <div class="page-container">
-        @can('role-create')
-            <a href="{{ route('roles.create') }}" class="btn btn-primary mb-3">Create New Role</a>
-        @endcan
-
         @if (session('success'))
             <div class="alert alert-success">{{ session('success') }}</div>
         @endif
@@ -35,7 +31,6 @@
                                 <tr>
                                     <th>S.no</th>
                                     <th>Name</th>
-                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -43,7 +38,6 @@
                                     <tr>
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $item->name }}</td>
-                                        <td><x-action-buttons :item="$item" route-name="roles" permission-name="role" /></td>
                                     </tr>
                                 @endforeach
                             </tbody>
