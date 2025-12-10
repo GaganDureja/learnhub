@@ -10,14 +10,9 @@ use Spatie\Permission\Models\Permission;
 
 class RoleController extends Controller
 {
-    public function __construct()
-    {
-        $this->middleware(['auth']);
-    }
-
     /**
-     * Show all roles
-     * Accessible by Master, SuperAdmin, Admin, SubAdmin
+     * Show all data
+     *
      */
     public function index()
     {
@@ -27,7 +22,7 @@ class RoleController extends Controller
     }
 
     /**
-     * Show form to create a new role
+     * Show form to create a new data
      *
      */
     public function create()
@@ -38,8 +33,8 @@ class RoleController extends Controller
     }
 
     /**
-     * Store a new role
-     * Only Master
+     * Store a new data
+     *
      */
     public function store(Request $request)
     {
@@ -51,16 +46,16 @@ class RoleController extends Controller
 
         $role = Role::create(['name' => $request->name]);
         $permissions = Permission::whereIn('id', $request->permissions ?? [])
-                    ->pluck('name')
-                    ->toArray();
+            ->pluck('name')
+            ->toArray();
         $role->syncPermissions($permissions ?? []);
         AlertHelper::flash('Success', 'Role created successfully.', 'success');
         return redirect()->route('roles.index');
     }
 
     /**
-     * Show form to edit a role
-     * Only Master
+     * Show form to edit a data
+     *
      */
     public function edit($id)
     {
@@ -72,8 +67,8 @@ class RoleController extends Controller
     }
 
     /**
-     * Update a role
-     * Only Master
+     * Update a data
+     *
      */
     public function update(Request $request, $id)
     {
@@ -88,16 +83,16 @@ class RoleController extends Controller
 
         $role->update(['name' => $request->name]);
         $permissions = Permission::whereIn('id', $request->permissions ?? [])
-                    ->pluck('name')
-                    ->toArray();
+            ->pluck('name')
+            ->toArray();
         $role->syncPermissions($permissions);
         AlertHelper::flash('Success', 'Role updated successfully.', 'success');
         return redirect()->route('roles.index');
     }
 
     /**
-     * Delete role
-     * Only Master
+     * Delete data
+     *
      */
     public function destroy($id)
     {
@@ -109,6 +104,10 @@ class RoleController extends Controller
         return redirect()->route('roles.index');
     }
 
+    /**
+     * Restore data
+     *
+     */
     public function restore($id)
     {
         $this->authorize('role-restore');
@@ -119,6 +118,10 @@ class RoleController extends Controller
         return redirect()->route('roles.index');
     }
 
+    /**
+     * Permanent Delete data
+     *
+     */
     public function forceDelete($id)
     {
         $this->authorize('role-force-delete');
